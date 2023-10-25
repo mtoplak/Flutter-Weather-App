@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "755755755750",
+    "project_id": "weather-app-flutter-e7536",
+    "storage_bucket": "weather-app-flutter-e7536.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755755755750:android:2e7cca01d35478efea3327",
+        "android_client_info": {
+          "package_name": "com.example.flutter_firebase_simple"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755755755750-effr6hnjsfdsbg7thl6188eii2g7ugp3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOQJ9xqtW8M4Zbv77V6PnjOk7jOKs_oec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "755755755750-effr6hnjsfdsbg7thl6188eii2g7ugp3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:755755755750:android:1905fd1a80690698ea3327",
+        "android_client_info": {
+          "package_name": "com.example.weather_app_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "755755755750-effr6hnjsfdsbg7thl6188eii2g7ugp3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOQJ9xqtW8M4Zbv77V6PnjOk7jOKs_oec"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "755755755750-effr6hnjsfdsbg7thl6188eii2g7ugp3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
