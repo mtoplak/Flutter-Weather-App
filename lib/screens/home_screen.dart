@@ -7,17 +7,23 @@ class WeatherData {
   final String city;
   final String country;
   final double temperatureC;
+  final double feelsLikeC;
   final String wind;
   final String conditionText;
   final String conditionImg;
+  final int humidity;
+  final double precipitationMm;
 
   WeatherData({
     required this.city,
     required this.country,
     required this.temperatureC,
+    required this.feelsLikeC,
     required this.wind,
     required this.conditionText,
     required this.conditionImg,
+    required this.humidity,
+    required this.precipitationMm,
   });
 }
 
@@ -50,11 +56,14 @@ class _HomeScreenState extends State<HomeScreen> {
             city: responseData['location']['name'],
             country: responseData['location']['country'],
             temperatureC: responseData['current']['temp_c'],
+            feelsLikeC: responseData['current']['feelslike_c'],
             wind:
                 'Wind: ${responseData['current']['wind_kph']} km/h ${responseData['current']['wind_dir']}',
             conditionText: responseData['current']['condition']['text'],
             conditionImg:
                 'http:' + responseData['current']['condition']['icon'],
+            humidity: responseData['current']['humidity'],
+            precipitationMm: responseData['current']['precip_mm'].toDouble(),
           );
         });
       }
@@ -67,10 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Weather App'),
+        title: const Text('Weather App'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
             onPressed: () => _logOut(context),
           ),
         ],
@@ -93,13 +102,122 @@ class _HomeScreenState extends State<HomeScreen> {
           if (weatherData != null)
             Column(
               children: [
-                Text(
-                    '${weatherData!.city}, ${weatherData!.country}'),
-                Text(
-                    'Temperature (°C): ${weatherData!.temperatureC.toStringAsFixed(1)}'),
-                Text(weatherData!.wind),
-                Text('Condition: ${weatherData!.conditionText}'),
-                Image.network(weatherData!.conditionImg),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${weatherData!.city}, ${weatherData!.country}',
+                      style: const TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Temperature: ',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${weatherData!.temperatureC}°C',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Feels Like: ',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${weatherData!.feelsLikeC}°C',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Wind: ',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      weatherData!.wind,
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Humidity: ',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${weatherData!.humidity}%',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Precipitation: ',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${weatherData!.precipitationMm.toStringAsFixed(2)} mm',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      weatherData!.conditionText,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.network(
+                      weatherData!.conditionImg,
+                      width: 200,
+                      height: 200,
+                    ),
+                  ],
+                ),
               ],
             ),
         ],
