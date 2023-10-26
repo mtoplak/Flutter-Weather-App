@@ -40,10 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: () async {
                 final user = await _firebaseService.loginUser(
                     _emailController.text, _passwordController.text);
-                print(_firebaseService.currentUser?.uid);
+                //print(_firebaseService.currentUser?.uid);
                 if (user != null) {
                   Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreen()),
                   );
                 }
               },
