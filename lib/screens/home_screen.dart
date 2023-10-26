@@ -27,6 +27,20 @@ class WeatherData {
   });
 }
 
+class WeatherForecast {
+  final String date;
+  final double maxTempC;
+  final String conditionText;
+  final String conditionImg;
+
+  WeatherForecast({
+    required this.date,
+    required this.maxTempC,
+    required this.conditionText,
+    required this.conditionImg,
+  });
+}
+
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -35,6 +49,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final dio = Dio();
   WeatherData? weatherData;
+  List<WeatherForecast> forecasts = [];
   final TextEditingController _controller = TextEditingController();
 
   Future<void> _logOut(BuildContext context) async {
@@ -72,21 +87,62 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<List<WeatherForecast>> fetchWeatherForecast(String city) async {
+    try {
+      final response = await dio.get(
+          'http://api.weatherapi.com/v1/forecast.json?key=<api_key>&q=$city&days=3&aqi=no&alerts=no');
+      if (response.statusCode == 200) {
+        final responseData = response.data;
+        final forecastList =
+            responseData['forecast']['forecastday'] as List<dynamic>;
+
+        List<WeatherForecast> forecasts = [];
+        int daysAdded = 0;
+
+        for (var forecastData in forecastList) {
+          final date = forecastData['date'] as String;
+
+          final maxTempC = forecastData['day']['maxtemp_c'] as double;
+          final conditionText =
+              forecastData['day']['condition']['text'] as String;
+          final conditionImg =
+              'http:' + forecastData['day']['condition']['icon'] as String;
+
+          forecasts.add(WeatherForecast(
+            date: date,
+            maxTempC: maxTempC,
+            conditionText: conditionText,
+            conditionImg: conditionImg,
+          ));
+          daysAdded++;
+
+          if (daysAdded == 3) {
+            break;
+          }
+        }
+
+        return forecasts;
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    return [];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Weather App'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => _logOut(context),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
+        appBar: AppBar(
+          title: const Text('Weather App'),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () => _logOut(context),
+            ),
+          ],
+        ),
+        body: ListView(padding: const EdgeInsets.all(16.0), children: [
           TextField(
             controller: _controller,
             decoration: InputDecoration(
@@ -95,6 +151,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(Icons.send),
                 onPressed: () {
                   fetchWeather(_controller.text);
+                  fetchWeatherForecast(_controller.text).then((value) {
+                    setState(() {
+                      forecasts = value;
+                    });
+                  });
                 },
               ),
             ),
@@ -196,7 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -207,7 +267,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -218,10 +277,42 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 10),
               ],
             ),
-        ],
-      ),
-    );
+          if (forecasts.isNotEmpty)
+            const Center(
+              child: Text(
+                '3-Day Forecast:',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          Row(
+            children: [
+              for (var forecast in forecasts) ...[
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(forecast.date),
+                      Text(
+                        'Temperature: ${forecast.maxTempC.toStringAsFixed(1)}°C',
+                      ),
+                      Text(forecast.conditionText),
+                      Image.network(
+                        forecast.conditionImg,
+                        width: 64,
+                        height: 64,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          )
+        ]));
   }
 }
