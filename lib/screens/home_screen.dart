@@ -52,6 +52,17 @@ class _HomeScreenState extends State<HomeScreen> {
   List<WeatherForecast> forecasts = [];
   final TextEditingController _controller = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+    fetchWeather("Ljubljana");
+    fetchWeatherForecast("Ljubljana").then((value) {
+      setState(() {
+        forecasts = value;
+      });
+    });
+  }
+
   Future<void> _logOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     // Navigate back to the login screen
